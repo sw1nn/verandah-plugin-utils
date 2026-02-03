@@ -1,0 +1,21 @@
+[package]
+name = "verandah-plugin-utils"
+version = "0.1.0"
+edition = "2024"
+description = "Common utilities for verandah widget plugins"
+license = "MIT"
+repository = "https://github.com/sw1nn/verandah-plugin-utils"
+
+[dependencies]
+# Image processing
+image = "0.25"
+imageproc = "0.25"
+
+# Font handling
+ab_glyph = "0.2"
+fontconfig = "0.6"
+
+# Logging
+tracing = "0.1"
+
+[dev-dependencies]
