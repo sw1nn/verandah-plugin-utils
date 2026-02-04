@@ -42,55 +42,100 @@ where
 ///
 /// Supports #RGB, #RRGGBB, and #RRGGBBAA formats.
 /// Alpha defaults to 0xFF if not specified.
+/// Returns None for invalid input.
 fn parse_hex(s: &str) -> Option<Rgba<u8>> {
-    let hex = s.strip_prefix('#')?;
-    match hex.len() {
-        3 => {
+    let b = s.as_bytes();
+    if b.first() != Some(&b'#') {
+        return None;
+    }
+    match b.len() {
+        4 => {
             // #RGB format - each digit is doubled, alpha = 0xFF
-            let r = u8::from_str_radix(&hex[0..1], 16).ok()? * 17;
-            let g = u8::from_str_radix(&hex[1..2], 16).ok()? * 17;
-            let b = u8::from_str_radix(&hex[2..3], 16).ok()? * 17;
-            Some(Rgba([r, g, b, 255]))
+            let r = try_hex_digit(b[1])?;
+            let g = try_hex_digit(b[2])?;
+            let b = try_hex_digit(b[3])?;
+            Some(Rgba([r * 17, g * 17, b * 17, 0xFF]))
         }
-        6 => {
+        7 => {
             // #RRGGBB format, alpha = 0xFF
-            let r = u8::from_str_radix(&hex[0..2], 16).ok()?;
-            let g = u8::from_str_radix(&hex[2..4], 16).ok()?;
-            let b = u8::from_str_radix(&hex[4..6], 16).ok()?;
-            Some(Rgba([r, g, b, 255]))
+            Some(Rgba([
+                try_hex_digit(b[1])? * 16 + try_hex_digit(b[2])?,
+                try_hex_digit(b[3])? * 16 + try_hex_digit(b[4])?,
+                try_hex_digit(b[5])? * 16 + try_hex_digit(b[6])?,
+                0xFF,
+            ]))
         }
-        8 => {
+        9 => {
             // #RRGGBBAA format
-            let r = u8::from_str_radix(&hex[0..2], 16).ok()?;
-            let g = u8::from_str_radix(&hex[2..4], 16).ok()?;
-            let b = u8::from_str_radix(&hex[4..6], 16).ok()?;
-            let a = u8::from_str_radix(&hex[6..8], 16).ok()?;
-            Some(Rgba([r, g, b, a]))
+            Some(Rgba([
+                try_hex_digit(b[1])? * 16 + try_hex_digit(b[2])?,
+                try_hex_digit(b[3])? * 16 + try_hex_digit(b[4])?,
+                try_hex_digit(b[5])? * 16 + try_hex_digit(b[6])?,
+                try_hex_digit(b[7])? * 16 + try_hex_digit(b[8])?,
+            ]))
         }
         _ => None,
     }
 }
 
-/// Parse a single hex digit to u8 at compile time.
-const fn hex_digit(c: u8) -> u8 {
+// ----------------------------------------------------------------------------
+// Compile-time hex parsing
+// ----------------------------------------------------------------------------
+
+/// Parse a single hex digit to u8, returning None for invalid digits.
+const fn try_hex_digit(c: u8) -> Option<u8> {
     match c {
-        b'0'..=b'9' => c - b'0',
-        b'A'..=b'F' => c - b'A' + 10,
-        b'a'..=b'f' => c - b'a' + 10,
-        _ => panic!("invalid hex digit"),
+        b'0'..=b'9' => Some(c - b'0'),
+        b'A'..=b'F' => Some(c - b'A' + 10),
+        b'a'..=b'f' => Some(c - b'a' + 10),
+        _ => None,
     }
 }
 
-/// Parse a #RRGGBB hex string at compile time. Alpha defaults to 0xFF.
+/// Parse a single hex digit to u8 at compile time. Panics on invalid input.
+const fn hex_digit(c: u8) -> u8 {
+    match try_hex_digit(c) {
+        Some(v) => v,
+        None => panic!("invalid hex digit"),
+    }
+}
+
+/// Parse a hex color string at compile time.
+///
+/// Supports #RGB, #RRGGBB, and #RRGGBBAA formats.
+/// Alpha defaults to 0xFF if not specified.
+/// Panics on invalid input.
 pub const fn hex(s: &str) -> Rgba<u8> {
     let b = s.as_bytes();
-    assert!(b.len() == 7 && b[0] == b'#', "expected #RRGGBB format");
-    Rgba([
-        hex_digit(b[1]) * 16 + hex_digit(b[2]),
-        hex_digit(b[3]) * 16 + hex_digit(b[4]),
-        hex_digit(b[5]) * 16 + hex_digit(b[6]),
-        0xFF,
-    ])
+    assert!(b[0] == b'#', "expected hex color with '#' prefix");
+    match b.len() {
+        4 => {
+            // #RGB format - each digit is doubled, alpha = 0xFF
+            let r = hex_digit(b[1]);
+            let g = hex_digit(b[2]);
+            let b = hex_digit(b[3]);
+            Rgba([r * 17, g * 17, b * 17, 0xFF])
+        }
+        7 => {
+            // #RRGGBB format, alpha = 0xFF
+            Rgba([
+                hex_digit(b[1]) * 16 + hex_digit(b[2]),
+                hex_digit(b[3]) * 16 + hex_digit(b[4]),
+                hex_digit(b[5]) * 16 + hex_digit(b[6]),
+                0xFF,
+            ])
+        }
+        9 => {
+            // #RRGGBBAA format
+            Rgba([
+                hex_digit(b[1]) * 16 + hex_digit(b[2]),
+                hex_digit(b[3]) * 16 + hex_digit(b[4]),
+                hex_digit(b[5]) * 16 + hex_digit(b[6]),
+                hex_digit(b[7]) * 16 + hex_digit(b[8]),
+            ])
+        }
+        _ => panic!("expected #RGB, #RRGGBB, or #RRGGBBAA format"),
+    }
 }
 
 /// Parse a HashMap of color strings to RGBA values.
@@ -395,5 +440,24 @@ mod tests {
             get_color(&colors, "fg", Rgba([0, 0, 0, 255])),
             Rgba([0, 0, 0, 255])
         );
+    }
+
+    // Const hex function tests
+    #[test]
+    fn test_const_hex_rgb() {
+        const COLOR: Rgba<u8> = hex("#fab");
+        assert_eq!(COLOR, Rgba([0xff, 0xaa, 0xbb, 0xff]));
+    }
+
+    #[test]
+    fn test_const_hex_rrggbb() {
+        const COLOR: Rgba<u8> = hex("#ff6b35");
+        assert_eq!(COLOR, Rgba([255, 107, 53, 255]));
+    }
+
+    #[test]
+    fn test_const_hex_rrggbbaa() {
+        const COLOR: Rgba<u8> = hex("#ff6b3580");
+        assert_eq!(COLOR, Rgba([255, 107, 53, 128]));
     }
 }
