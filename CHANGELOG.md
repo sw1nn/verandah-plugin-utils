@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.2.0 - 2026-02-04
+#### Features
+- (**colors**) expose hex color parser as rgb in prelude - (837f28f) - Neale Swinnerton
+
+- - -
+
 ## v0.1.0 - 2026-02-03
 #### Features
 - initial release of verandah-plugin-utils - (1d72b91) - Neale Swinnerton
