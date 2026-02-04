@@ -2,6 +2,11 @@ tag_prefix = "v"
 skip_untracked = true
 ignore_merge_commits = true
 
+post_bump_hooks = [
+    "git push",
+    "git push origin v{{version}}",
+]
+
 [changelog]
 path = "CHANGELOG.md"
 authors = []
