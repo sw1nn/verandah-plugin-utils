@@ -41,7 +41,7 @@ pub mod prelude {
     pub use ::image::{Rgb, RgbImage, Rgba, RgbaImage};
 
     // Colors
-    pub use crate::colors::{get_color, lookup as lookup_color, parse_colors};
+    pub use crate::colors::{get_color, hex as rgb, lookup as lookup_color, parse_colors};
 
     // Font
     pub use crate::font::get_system_monospace_font;

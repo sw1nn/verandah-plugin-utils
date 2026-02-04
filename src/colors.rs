@@ -82,7 +82,7 @@ const fn hex_digit(c: u8) -> u8 {
 }
 
 /// Parse a #RRGGBB hex string at compile time. Alpha defaults to 0xFF.
-const fn hex(s: &str) -> Rgba<u8> {
+pub const fn hex(s: &str) -> Rgba<u8> {
     let b = s.as_bytes();
     assert!(b.len() == 7 && b[0] == b'#', "expected #RRGGBB format");
     Rgba([
