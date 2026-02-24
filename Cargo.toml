@@ -9,11 +9,11 @@ repository = "https://github.com/sw1nn/verandah-plugin-utils"
 [dependencies]
 # Image processing
 image = "0.25"
-imageproc = "0.25"
+imageproc = "0.26"
 
 # Font handling
 ab_glyph = "0.2"
-fontconfig = "0.6"
+fontconfig = "0.10"
 
 # Logging
 tracing = "0.1"
