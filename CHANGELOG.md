@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.4.0 - 2026-02-24
+#### Features
+- (**deps**) update deps and cog config - (6dcefa0) - Neale Swinnerton
+
+- - -
+
 ## v0.3.0 - 2026-02-04
 #### Features
 - (**colors**) extend hex function to support #RGB and #RRGGBBAA formats - (64f50f8) - Neale Swinnerton
