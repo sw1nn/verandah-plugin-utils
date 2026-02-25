@@ -38,7 +38,7 @@ pub mod text;
 /// ```
 pub mod prelude {
     // Re-export image types that plugins commonly use
-    pub use ::image::{Rgb, RgbImage, Rgba, RgbaImage};
+    pub use ::image::{Pixel, Rgb, RgbImage, Rgba, RgbaImage};
 
     // Re-export font types for plugins that need fine-grained text control
     pub use ab_glyph::{Font, FontRef, PxScale, ScaleFont};
