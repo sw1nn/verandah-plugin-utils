@@ -28,6 +28,7 @@
 pub mod colors;
 pub mod font;
 pub mod image;
+pub mod serde;
 pub mod text;
 
 /// Prelude module for convenient imports.
@@ -64,4 +65,7 @@ pub mod prelude {
         apply_brightness_pulse, bytes_to_rgb, bytes_to_rgba, rgb_to_rgba, rgba_to_rgb, scale_image,
         to_greyscale,
     };
+
+    // Serde utilities
+    pub use crate::serde::IgnoredValue;
 }
