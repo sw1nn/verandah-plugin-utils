@@ -164,6 +164,45 @@ pub fn draw_centered_text_with_reserved(
     draw_text_mut(rgba, fg_color, x, y, scale, &font, text);
 }
 
+/// Draw text horizontally centered at a given y position with a fixed scale.
+///
+/// Handles font loading internally. If the system font cannot be loaded,
+/// this is a no-op.
+///
+/// # Arguments
+/// * `rgba` - The image to draw on
+/// * `text` - The text to draw
+/// * `color` - The text color
+/// * `scale_value` - Font scale in pixels (e.g., 14.0, 18.0, 24.0)
+/// * `y` - Vertical position (pixels from top)
+pub fn draw_text_hcentered(
+    rgba: &mut RgbaImage,
+    text: &str,
+    color: Rgba<u8>,
+    scale_value: f32,
+    y: i32,
+) {
+    let Some(font_bytes) = get_system_monospace_font() else {
+        return;
+    };
+    let Ok(font) = FontRef::try_from_slice(font_bytes) else {
+        return;
+    };
+
+    let width = rgba.width();
+    let scale = PxScale::from(scale_value);
+    let scaled_font = font.as_scaled(scale);
+
+    let text_width: f32 = text
+        .chars()
+        .map(|c| scaled_font.h_advance(font.glyph_id(c)))
+        .sum();
+
+    let x = ((width as f32 - text_width) / 2.0).max(0.0) as i32;
+
+    draw_text_mut(rgba, color, x, y, scale, &font, text);
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

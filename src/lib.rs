@@ -40,6 +40,13 @@ pub mod prelude {
     // Re-export image types that plugins commonly use
     pub use ::image::{Rgb, RgbImage, Rgba, RgbaImage};
 
+    // Re-export font types for plugins that need fine-grained text control
+    pub use ab_glyph::{Font, FontRef, PxScale, ScaleFont};
+
+    // Re-export drawing primitives for plugins that need custom rendering
+    pub use imageproc::drawing::{draw_filled_rect_mut, draw_text_mut};
+    pub use imageproc::rect::Rect;
+
     // Colors
     pub use crate::colors::{get_color, hex as rgb, lookup as lookup_color, parse_colors};
 
@@ -48,8 +55,8 @@ pub mod prelude {
 
     // Text
     pub use crate::text::{
-        draw_centered_text, draw_centered_text_with_reserved, find_optimal_scale,
-        measure_text_width,
+        draw_centered_text, draw_centered_text_with_reserved, draw_text_hcentered,
+        find_optimal_scale, measure_text_width,
     };
 
     // Image utilities
