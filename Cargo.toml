@@ -16,7 +16,7 @@ ab_glyph = "0.2"
 fontconfig = "0.10"
 
 # Serde
-serde = "1"
+serde = "1.0"
 
 # Logging
 tracing = "0.1"
