@@ -2,6 +2,17 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.7.0 - 2026-07-30
+#### Build system
+- depend on verandah-image v0.1.0 - (99efe84) - Neale Swinnerton
+#### Refactoring
+- <span style="background-color: #d73a49; color: white; padding: 2px 6px; border-radius: 3px; font-weight: bold; font-size: 0.85em;">BREAKING</span>re-export verandah-image instead of owning image modules - (fbd6641) - Neale Swinnerton
+#### Miscellaneous Chores
+- (**deps**) bump versions to latest major.minor - (ef80a39) - Neale Swinnerton
+- add Justfile with release recipe - (932c8f5) - Neale Swinnerton
+
+- - -
+
 ## v0.4.0 - 2026-02-24
 #### Features
 - (**deps**) update deps and cog config - (6dcefa0) - Neale Swinnerton
