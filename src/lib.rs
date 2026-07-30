@@ -1,12 +1,9 @@
 //! Common utilities for verandah widget plugins.
 //!
-//! This crate provides shared functionality for building verandah plugins,
-//! including:
-//!
-//! - **colors**: CSS color parsing (named colors and hex formats)
-//! - **font**: System font loading via fontconfig
-//! - **text**: Text measurement and rendering utilities
-//! - **image**: Image effects (brightness pulse) and format conversions
+//! Badge composition, colour parsing, font loading, image effects and text
+//! rendering live in [`verandah_image`]; this crate re-exports them unchanged so
+//! existing plugins keep compiling, and adds the serde helpers that are specific
+//! to plugin configuration.
 //!
 //! # Example
 //!
@@ -21,50 +18,21 @@
 //! let mut img = RgbaImage::new(72, 72);
 //! draw_centered_text(&mut img, "Hello", fg, 0.1);
 //!
-//! // Apply brightness pulse for animation
-//! apply_brightness_pulse(&mut img);
+//! // Badge the frame with a runtime-computed mark
+//! apply_badge(&mut img, &BadgeSpec::new(Mark::Text(unread.to_string())));
 //! ```
 
-pub mod colors;
-pub mod font;
-pub mod image;
+pub use verandah_image::{badge, colors, font, image, text};
+
 pub mod serde;
-pub mod text;
 
 /// Prelude module for convenient imports.
 ///
-/// Import everything commonly needed with:
 /// ```ignore
 /// use verandah_plugin_utils::prelude::*;
 /// ```
 pub mod prelude {
-    // Re-export image types that plugins commonly use
-    pub use ::image::{Pixel, Rgb, RgbImage, Rgba, RgbaImage};
-
-    // Re-export font types for plugins that need fine-grained text control
-    pub use ab_glyph::{Font, FontRef, PxScale, ScaleFont};
-
-    // Re-export drawing primitives for plugins that need custom rendering
-    pub use imageproc::drawing::{draw_filled_rect_mut, draw_text_mut};
-    pub use imageproc::rect::Rect;
-
-    // Colors
-    pub use crate::colors::{get_color, hex as rgb, lookup as lookup_color, parse_colors};
-
-    // Font
-    pub use crate::font::get_system_monospace_font;
-
-    // Text
-    pub use crate::text::{
-        draw_centered_text, draw_centered_text_with_reserved, draw_text_hcentered,
-        find_optimal_scale, measure_text_width,
-    };
-
-    // Image utilities
-    pub use crate::image::{
-        apply_brightness_pulse, bytes_to_rgb, bytes_to_rgba, rgb_to_rgba, rgba_to_rgb, scale_image,
-        to_greyscale,
-    };
+    pub use verandah_image::prelude::*;
 
     // Serde utilities
     pub use crate::serde::IgnoredValue;

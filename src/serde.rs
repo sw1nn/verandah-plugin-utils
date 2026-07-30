@@ -1,7 +1,7 @@
 //! Serde utilities for plugin configuration.
 
-use serde::de::{Deserializer, IgnoredAny};
 use serde::Deserialize;
+use serde::de::{Deserializer, IgnoredAny};
 
 /// A serde-deserializable value that discards whatever it receives.
 ///
@@ -41,8 +41,7 @@ mod tests {
 
     #[test]
     fn test_ignored_value_deserializes_string() -> Result<(), serde::de::value::Error> {
-        let _: IgnoredValue =
-            IgnoredValue::deserialize("hello".to_owned().into_deserializer())?;
+        let _: IgnoredValue = IgnoredValue::deserialize("hello".to_owned().into_deserializer())?;
         Ok(())
     }
 
