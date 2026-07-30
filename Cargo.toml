@@ -7,7 +7,7 @@ license = "MIT"
 repository = "https://github.com/sw1nn/verandah-plugin-utils"
 
 [dependencies]
-verandah-image = { path = "../verandah-image" }
+verandah-image = { git = "https://github.com/sw1nn/verandah-image.git", tag = "v0.1.0" }
 
 # Serde
 serde = "1"
